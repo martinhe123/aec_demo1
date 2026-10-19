@@ -14,6 +14,7 @@ node_modules/
 # Local reference assets and 3D model source files
 ref_images/
 ref_models/
+render_images/
 *.stl
 *.3dm
 *.3dmbak
