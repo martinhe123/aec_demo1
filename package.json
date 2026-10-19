@@ -1,0 +1,13 @@
+{
+  "name": "forma-aec-prototype",
+  "private": true,
+  "scripts": {
+    "build:3d": "esbuild ././three-viewer.js --bundle --format=iife --outfile=./three-viewer.bundle.js"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  }
+}

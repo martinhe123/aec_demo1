@@ -1,0 +1,9 @@
+# Web API and ASGI server
+fastapi==0.136.3
+uvicorn==0.48.0
+
+# OpenAI Responses API client
+openai==1.75.0
+
+# Request, response, and structured-output models
+pydantic==2.11.3

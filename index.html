@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A conceptual AEC feasibility workspace." />
+    <title>Forma — Concept Feasibility</title>
+    <link rel="stylesheet" href="styles.css?v=revision4" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Forma home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>FORMA</span>
+        </a>
+
+        <button class="button button-primary button-wide" id="newProjectButton" type="button">
+          <span aria-hidden="true">＋</span> New project
+        </button>
+
+        <div class="sidebar-label">Projects</div>
+        <nav id="projectList" class="project-list" aria-label="Projects"></nav>
+
+        <div class="sidebar-foot">
+          <span class="status-dot"></span>
+          <span>Concept prototype</span>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <section id="welcomeView" class="welcome-view">
+          <div class="eyebrow">AEC CONCEPT FEASIBILITY</div>
+          <h1>Turn a massing idea into a story you can test.</h1>
+          <p>Upload a stack diagram and 3D massing model. Forma connects program, area, and conceptual economics—then lets you revise the scheme in plain language.</p>
+          <button class="button button-primary button-large" id="welcomeCreateButton" type="button">Create your first project <span>→</span></button>
+          <div class="welcome-flow" aria-label="Product workflow">
+            <div><span>01</span><strong>Interpret</strong><small>Stack diagram</small></div>
+            <b>→</b>
+            <div><span>02</span><strong>Model</strong><small>Program + massing</small></div>
+            <b>→</b>
+            <div><span>03</span><strong>Test</strong><small>Concept economics</small></div>
+            <b>→</b>
+            <div><span>04</span><strong>Revise</strong><small>Conversational edits</small></div>
+          </div>
+        </section>
+
+        <section id="workspaceView" class="workspace-view hidden">
+          <header class="topbar">
+            <div>
+              <div class="breadcrumb"><span>Projects</span><i>/</i><span id="breadcrumbName"></span><i>/</i><span id="breadcrumbScheme"></span></div>
+              <div class="title-row">
+                <h1 id="projectTitle"></h1>
+                <span class="version-pill" id="versionPill">v1</span>
+              </div>
+              <div class="scheme-controls" aria-label="Scheme and version">
+                <label><span>Scheme</span><select id="schemeSelect"></select></label>
+                <label><span>Version</span><select id="versionSelect"></select></label>
+              </div>
+            </div>
+            <div class="topbar-actions">
+              <span class="saved-state" id="savedState">Session only</span>
+              <button class="button button-secondary" id="newSchemeButton" type="button">New scheme</button>
+              <button class="button button-secondary" id="saveVersionButton" type="button">Save as new version</button>
+            </div>
+          </header>
+
+          <div class="phase-nav" role="tablist" aria-label="Project phases">
+            <button class="phase-tab active" data-target="inputsSection" type="button"><span>1</span> Inputs</button>
+            <button class="phase-tab" data-target="schemeSection" type="button"><span>2</span> Scheme</button>
+            <button class="phase-tab" data-target="economicsSection" type="button"><span>3</span> Economics</button>
+            <button class="phase-tab" data-target="versionRevisionSection" type="button"><span>4</span> Version revision</button>
+            <button class="phase-tab" data-target="comparisonSection" type="button"><span>5</span> Comparison</button>
+          </div>
+
+          <div class="workspace-grid phase-pages">
+            <section class="workspace-column phase-page inputs-column active-page" id="inputsSection">
+              <div class="section-heading">
+                <div><span class="section-kicker">01 / INPUTS</span><h2>Define the concept</h2></div>
+              </div>
+
+              <div class="input-support-column">
+              <article class="card upload-card stack-upload-card">
+                <div class="card-title-row">
+                  <div><span class="icon-box">▥</span><div><h3>Stack diagram</h3><p>Program by elevation</p></div></div>
+                  <span class="step-status" id="stackStatus">Required</span>
+                </div>
+                <label class="dropzone" id="stackDropzone" for="stackInput">
+                  <input id="stackInput" type="file" accept="image/*" hidden />
+                  <img id="stackPreview" alt="Uploaded stack diagram" class="hidden" />
+                  <div id="stackPrompt">
+                    <span class="upload-icon">↥</span>
+                    <strong>Drop stack diagram here</strong>
+                    <small>PNG, JPG, or WEBP</small>
+                  </div>
+                </label>
+                <button class="button button-primary button-wide" id="analyzeButton" type="button" disabled>Interpret diagram</button>
+                <p class="fine-print" id="analysisNote">OpenAI when configured · demo interpretation otherwise</p>
+              </article>
+
+              <article class="card upload-card massing-upload-card">
+                <div class="card-title-row">
+                  <div><span class="icon-box">◇</span><div><h3>Massing model</h3><p>Building envelope</p></div></div>
+                  <span class="step-status" id="stlStatus">Required</span>
+                </div>
+                <label class="compact-dropzone" for="stlInput">
+                  <input id="stlInput" type="file" accept=".stl" hidden />
+                  <span class="file-symbol">3D</span>
+                  <span><strong id="stlFileName">Upload STL model</strong><small id="stlFileMeta">Binary or ASCII STL</small></span>
+                  <b>Browse</b>
+                </label>
+              </article>
+              </div>
+
+              <article class="card upload-card reference-upload-card">
+                <div class="card-title-row">
+                  <div><span class="icon-box">▧</span><div><h3>Reference images</h3><p>Optional scheme context</p></div></div>
+                </div>
+                <label class="compact-dropzone" for="referenceInput">
+                  <input id="referenceInput" type="file" accept="image/*" multiple hidden />
+                  <span class="file-symbol">＋</span>
+                  <span><strong>Add images</strong><small>Elevations, renders, sketches</small></span>
+                  <b>Browse</b>
+                </label>
+                <div id="referenceGallery" class="reference-gallery"></div>
+              </article>
+            </section>
+
+            <section class="workspace-column phase-page scheme-column" id="schemeSection">
+              <div class="section-heading">
+                <div><span class="section-kicker">02 / SCHEME</span><h2>Program + massing</h2></div>
+                <span class="concept-badge">CONCEPTUAL</span>
+              </div>
+
+              <article class="card viewer-card">
+                <div class="viewer-toolbar">
+                  <div class="segmented-control" aria-label="Viewer mode">
+                    <button type="button" class="active" data-view="massing">Massing</button>
+                    <button type="button" data-view="stack">Stack</button>
+                  </div>
+                  <span id="buildingHeight">589' total height</span>
+                </div>
+                <div id="massingView" class="massing-view">
+                  <div class="ground-grid"></div>
+                  <div id="threeViewer" class="three-viewer hidden" aria-label="Interactive 3D massing viewer"></div>
+                  <div id="massingModel" class="massing-model empty-model">
+                    <div class="empty-model-copy"><b>3D</b><span>Upload an STL model to shape the scheme</span></div>
+                  </div>
+                  <div class="north-arrow"><span>N</span><i></i></div>
+                </div>
+                <div id="stackView" class="stack-view hidden">
+                  <div id="stackGraphic" class="stack-graphic"></div>
+                </div>
+                <div id="programLegend" class="program-legend"></div>
+              </article>
+
+              <article class="card program-card">
+                <div class="card-header"><div><h3>Program schedule</h3><p>Click any program to adjust its assumptions</p></div><span id="zoneCount">0 zones</span></div>
+                <div id="programSchedule" class="program-schedule"></div>
+              </article>
+            </section>
+
+            <section class="workspace-column phase-page economics-column" id="economicsSection">
+              <div class="section-heading">
+                <div><span class="section-kicker">03 / ECONOMICS</span><h2>Concept snapshot</h2></div>
+              </div>
+
+              <div class="metric-grid">
+                <article class="metric-card"><span>GROSS AREA</span><strong id="grossArea">—</strong><small>Conceptual GSF</small></article>
+                <article class="metric-card accent"><span>EST. VALUE</span><strong id="estimatedValue">—</strong><small>Gross development value</small></article>
+                <article class="metric-card"><span>EST. COST</span><strong id="estimatedCost">—</strong><small>Hard cost allowance</small></article>
+                <article class="metric-card"><span>VALUE − COST</span><strong id="estimatedMargin">—</strong><small id="marginPercent">Before soft costs</small></article>
+              </div>
+
+              <article class="card economics-card">
+                <div class="card-header"><div><h3>Economics by program</h3><p>Loose feasibility assumptions</p></div><button id="editAssumptionsButton" class="text-button" type="button">Edit assumptions</button></div>
+                <div class="economics-table-wrap">
+                  <table>
+                    <thead><tr><th>Program</th><th>Area</th><th>Value</th><th>Cost</th></tr></thead>
+                    <tbody id="economicsTable"></tbody>
+                  </table>
+                </div>
+                <div class="estimate-note"><b>Concept estimate</b><span>For product demonstration only—not for design, appraisal, or investment decisions.</span></div>
+              </article>
+
+            </section>
+
+            <section class="workspace-column phase-page revision-column" id="versionRevisionSection">
+              <div class="section-heading">
+                <div><span class="section-kicker">04 / VERSION REVISION</span><h2>Revise the active scheme</h2></div>
+                <span class="concept-badge">NEW VERSION</span>
+              </div>
+
+              <article class="card chat-card revision-chat-card">
+                <div class="chat-heading">
+                  <div class="ai-mark">✦</div>
+                  <div><h3>Revise with Forma</h3><p>Try: “From 100' to 120', make it retail.”</p></div>
+                </div>
+                <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+                <form class="chat-form" id="chatForm">
+                  <input id="chatInput" type="text" autocomplete="off" placeholder="Describe a program change…" />
+                  <button type="submit" aria-label="Send message">↑</button>
+                </form>
+              </article>
+
+              <div class="revision-basis" id="revisionBasis"></div>
+
+              <article class="card revision-data-card">
+                <div class="card-header">
+                  <div><h3>Current economic parameters</h3><p>Program assumptions used by this version</p></div>
+                </div>
+                <div class="revision-table-wrap">
+                  <table class="revision-table">
+                    <thead><tr><th>Program</th><th>Height</th><th>Efficiency</th><th>Value / SF</th><th>Cost / SF</th></tr></thead>
+                    <tbody id="revisionParameterTable"></tbody>
+                  </table>
+                </div>
+              </article>
+
+              <article class="card revision-data-card">
+                <div class="card-header">
+                  <div><h3>Interpreted program ranges</h3><p id="revisionZoneSource">Interpret a stack image to populate these ranges</p></div>
+                </div>
+                <div class="revision-table-wrap">
+                  <table class="revision-table">
+                    <thead><tr><th>From elevation</th><th>To elevation</th><th>Program allocation</th></tr></thead>
+                    <tbody id="revisionZoneTable"></tbody>
+                  </table>
+                </div>
+              </article>
+            </section>
+
+            <section class="workspace-column phase-page comparison-column" id="comparisonSection">
+              <div class="section-heading">
+                <div><span class="section-kicker">05 / COMPARISON</span><h2>Compare two options</h2></div>
+                <span class="concept-badge">SIDE BY SIDE</span>
+              </div>
+
+              <div class="comparison-grid">
+                <article class="card comparison-card">
+                  <div class="comparison-picker">
+                    <div><span>Option A</span><h3 id="compareLeftTitle"></h3></div>
+                    <div class="comparison-selects">
+                      <label>Scheme<select id="compareLeftScheme" data-compare-side="left" data-compare-field="scheme"></select></label>
+                      <label>Version<select id="compareLeftVersion" data-compare-side="left" data-compare-field="version"></select></label>
+                    </div>
+                  </div>
+                  <div class="comparison-render" id="compareLeftRender"></div>
+                  <div class="comparison-metrics" id="compareLeftMetrics"></div>
+                </article>
+
+                <article class="card comparison-card">
+                  <div class="comparison-picker">
+                    <div><span>Option B</span><h3 id="compareRightTitle"></h3></div>
+                    <div class="comparison-selects">
+                      <label>Scheme<select id="compareRightScheme" data-compare-side="right" data-compare-field="scheme"></select></label>
+                      <label>Version<select id="compareRightVersion" data-compare-side="right" data-compare-field="version"></select></label>
+                    </div>
+                  </div>
+                  <div class="comparison-render" id="compareRightRender"></div>
+                  <div class="comparison-metrics" id="compareRightMetrics"></div>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="projectDialog" class="modal">
+      <form method="dialog" id="projectForm">
+        <button class="modal-close" value="cancel" aria-label="Close">×</button>
+        <span class="section-kicker">NEW PROJECT</span>
+        <h2>Name the next idea.</h2>
+        <p>You can add the stack diagram and massing model in the next step.</p>
+        <label>Project name<input id="projectNameInput" type="text" required maxlength="60" placeholder="e.g. Fulton Tower" /></label>
+        <div class="modal-actions"><button class="button button-secondary" value="cancel" type="button" id="cancelProjectButton">Cancel</button><button class="button button-primary" type="submit">Create project</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="assumptionsDialog" class="modal assumptions-modal">
+      <form method="dialog" id="assumptionsForm">
+        <button class="modal-close" value="cancel" aria-label="Close">×</button>
+        <span class="section-kicker">CONCEPT ASSUMPTIONS</span>
+        <h2>Value and cost per square foot</h2>
+        <p>These deliberately simple inputs drive the product demonstration.</p>
+        <div id="assumptionsFields" class="assumptions-fields"></div>
+        <div class="modal-actions"><button class="button button-secondary" value="cancel" type="button" id="cancelAssumptionsButton">Cancel</button><button class="button button-primary" type="submit">Apply assumptions</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="schemeDialog" class="modal">
+      <form method="dialog" id="schemeForm">
+        <button class="modal-close" value="cancel" aria-label="Close">×</button>
+        <span class="section-kicker">NEW SCHEME</span>
+        <h2>Explore another option.</h2>
+        <p>This scheme starts with a clean set of inputs and its own STL model.</p>
+        <label>Scheme name<input id="schemeNameInput" type="text" required maxlength="60" placeholder="e.g. Courtyard option" /></label>
+        <div class="modal-actions"><button class="button button-secondary" value="cancel" type="button" id="cancelSchemeButton">Cancel</button><button class="button button-primary" type="submit">Create scheme</button></div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="three-viewer.bundle.js?v=3d1"></script>
+    <script src="config.js"></script>
+    <script type="module" src="js/app.js?v=modules14"></script>
+  </body>
+</html>

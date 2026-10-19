@@ -1,0 +1,19 @@
+# Local credentials and environment files
+secret.txt
+**/secret.txt
+.env
+.env.*
+!.env.example
+
+# Local runtime artifacts
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+
+# Local reference assets and 3D model source files
+ref_images/
+ref_models/
+*.stl
+*.3dm
+*.3dmbak
